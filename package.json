@@ -1,0 +1,19 @@
+{
+  "name": "define-generic",
+  "version": "0.1.0",
+  "description": "Simple single dispatch generic functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/tape \"test*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEADB17/define-generic.git"
+  },
+  "author": "DEADB17 <DEADB17@gmail.com>",
+  "license": "MIT",
+  "keywords": [ "generic functions", "single-dispatch" ],
+  "devDependencies": {
+    "tape": "^3.5.0"
+  }
+}
