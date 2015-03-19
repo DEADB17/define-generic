@@ -1,5 +1,3 @@
-var slice = Array.prototype.slice;
-
 var defineProperty = Object.defineProperty || function (obj, prop, desc) {
     'use strict';
     obj[prop] = desc.value;
@@ -14,17 +12,16 @@ function noMethod() {
 module.exports = function defineGeneric(methodId, defaultFun) {
     'use strict';
     if (typeof defaultFun !== 'function') { defaultFun = noMethod; }
-    var appl = function () {
-	var obj = arguments[0];
-        if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null ) {
+    function appl() {
+		var fun, obj = arguments[0], type = typeof obj;
+        if (type !== 'object' && type !== 'function' || obj === null ) {
             throw new TypeError('First argument is not an object');
         }
-	var fun = obj[methodId] || defaultFun;
-        var args = slice.call(arguments, 1);
-	return fun.apply(obj, args);
-    };
+		fun = obj[methodId] || defaultFun;
+		return fun.apply(obj, arguments);
+    }
     appl.addMethod = function (obj, fun) {
-	return defineProperty(obj, methodId, {value: fun});
+		return defineProperty(obj, methodId, {value: fun});
     };
     appl.isImplemented = function (obj) {
         return methodId in obj;

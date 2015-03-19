@@ -25,14 +25,15 @@ test('defineGeneric', function (t) {
 
     var defaultMethod = function () {
         var args = [].slice.call(arguments);
-        t.ok(true, 'the default method can be overriden');
-        t.equal(args.length, 3, 'it is called with 3 arguments');
-        t.equal(args[0], 'zero', 'argument 1 is "zero"');
-        t.equal(args[1], 1, 'argument 2 is 1');
-        t.deepEqual(args[2], {two: 2}, 'argument 3 is {two:2}');
+        t.pass('the default method can be overriden');
+        t.is(args.length, 4, 'it is called with 4 arguments');
+        t.same(args[0], {}, 'argument 1 is {}');
+        t.is(args[1], 'two', 'argument 2 is "two"');
+        t.is(args[2], 3, 'argument 3 is 3');
+        t.same(args[3], {four: 4}, 'argument 4 is {four:4}');
     };
     gf = defineGeneric('gf3', defaultMethod);
-    gf({}, 'zero', 1, {two:2});
+    gf({}, 'two', 3, {four:4});
 
     var testFn = defineGeneric('testable');
     var testable = testFn.addMethod({}, function () {});
