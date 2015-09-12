@@ -13,14 +13,7 @@ test('dispatchOn', function (t) {
         A: function () { return 'A method'; },
         B: function () { return 'B method'; }
     };
-    function error(key, getKey, methods, defaultKey, onError) {
-        t.is(getKey, selector);
-        t.is(methods, when);
-        t.is(defaultKey, 'DEFAULT');
-        t.is(onError, error);
-        return 'on error called';
-    }
-    var defaults = dispatchOn(selector, when, 'DEFAULT', error);
+    var defaults = dispatchOn(selector, when, 'DEFAULT');
 
     t.is(defaults(true), 'A method');
     t.is(defaults(false, true), 'B method');
@@ -28,7 +21,7 @@ test('dispatchOn', function (t) {
     t.is(defaults(), 'DEAFAULT method');
 
     delete when.DEFAULT;
-    t.is(defaults(), 'on error called');
+    t.throws(defaults, ReferenceError);
 
     t.end();
 });
