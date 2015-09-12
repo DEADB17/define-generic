@@ -13,7 +13,7 @@ test('dispatchOn', function (t) {
         A: function () { return 'A method'; },
         B: function () { return 'B method'; }
     };
-    var defaults = dispatchOn(selector, when, 'DEFAULT');
+    var defaults = dispatchOn('DEFAULT', selector, when);
 
     t.is(defaults(true), 'A method');
     t.is(defaults(false, true), 'B method');

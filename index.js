@@ -4,7 +4,7 @@
 
 var owns = Object.prototype.hasOwnProperty;
 
-function defineGeneric(getKey, methods, defaultKey) {
+function defineGeneric(defaultKey, getKey, methods) {
     var defaultKey2 = defaultKey || '*';
     return function appl(/* arguments */) {
         var fn, key = getKey.apply(getKey, arguments);
