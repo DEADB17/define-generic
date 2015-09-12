@@ -1,31 +1,34 @@
-var defineProperty = Object.defineProperty || function (obj, prop, desc) {
-    'use strict';
+/*eslint strict:[2,"global"]*/
+
+'use strict';
+
+var defineProperty = Object.defineProperty || function defineProperty(obj, prop, desc) {
     obj[prop] = desc.value;
     return obj;
 };
 
 function noMethod() {
-    'use strict';
     throw new ReferenceError('No such method');
 }
 
-module.exports = function defineGeneric(methodId, defaultFun) {
-    'use strict';
-    if (typeof defaultFun !== 'function') { defaultFun = noMethod; }
+function defineGeneric(methodId, defaultFun) {
+    var defaultFn = typeof defaultFun !== 'function' ? noMethod : defaultFun;
     function appl() {
-		var fun, obj = arguments[0], type = typeof obj;
-        if (type !== 'object' && type !== 'function' || obj === null ) {
+        var fun, obj = arguments[0], type = typeof obj;
+        if (type !== 'object' && type !== 'function' || obj === null) {
             throw new TypeError('First argument is not an object');
         }
-		fun = obj[methodId] || defaultFun;
-		return fun.apply(obj, arguments);
+        fun = obj[methodId] || defaultFn;
+        return fun.apply(obj, arguments);
     }
-    appl.addMethod = function (obj, fun) {
-		return defineProperty(obj, methodId, {value: fun});
+    appl.addMethod = function addMethod(obj, fun) {
+        return defineProperty(obj, methodId, { value: fun });
     };
-    appl.isImplemented = function (obj) {
+    appl.isImplemented = function isImplemented(obj) {
         return methodId in obj;
     };
     appl.defineGeneric = defineGeneric;
     return appl;
-};
+}
+
+module.exports = defineGeneric;
