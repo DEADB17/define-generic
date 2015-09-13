@@ -1,16 +1,14 @@
 # define-generic
 ## Simple single dispatch generic functions
 
-```
+```javascript
 var defineGeneric = require('define-generic');
 
-defineGeneric(methodId:String, [defaultFun:Function]) -> instance
+defineGeneric(methods/*Object*/, selector/*Function*/) -> genericFunction
 
-instance.addMethod = function (class:Object, Function) -> instance
+genericFunction.for(key/*String*/, method/*Function*/) -> genericFunction
 
-instance.isImplemented = function (Object) -> Bool
+genericFunction.implements(...parameters) -> Bool
 
-instance.defineGeneric = defineGeneric
-
-instance(Object, ...parameters) -> Any
+genericFunction(...parameters) -> Any
 ```

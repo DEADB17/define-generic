@@ -2,33 +2,27 @@
 
 'use strict';
 
-var defineProperty = Object.defineProperty || function defineProperty(obj, prop, desc) {
-    obj[prop] = desc.value;
-    return obj;
-};
-
-function noMethod() {
-    throw new ReferenceError('No such method');
+function applyGeneric(methods, selector, args) {
+    var fn = selector(methods, args);
+    if (typeof fn !== 'function') throw new TypeError(fn + ' is not a valid method');
+    return fn.apply(null, args);
 }
 
-function defineGeneric(methodId, defaultFun) {
-    var defaultFn = typeof defaultFun !== 'function' ? noMethod : defaultFun;
-    function appl() {
-        var fun, obj = arguments[0], type = typeof obj;
-        if (type !== 'object' && type !== 'function' || obj === null) {
-            throw new TypeError('First argument is not an object');
-        }
-        fun = obj[methodId] || defaultFn;
-        return fun.apply(obj, arguments);
+function defineGeneric(methods, selector) {
+    function generic(/* arguments */) {
+        return applyGeneric(methods, selector, arguments);
     }
-    appl.addMethod = function addMethod(obj, fun) {
-        return defineProperty(obj, methodId, { value: fun });
+
+    generic.for = function forGeneric(key, fn) {
+        methods[key] = fn;
+        return generic;
     };
-    appl.isImplemented = function isImplemented(obj) {
-        return methodId in obj;
+
+    generic.implements = function implementsGeneric(/* arguments */) {
+        return typeof selector(methods, arguments) === 'function';
     };
-    appl.defineGeneric = defineGeneric;
-    return appl;
+
+    return generic;
 }
 
 module.exports = defineGeneric;
