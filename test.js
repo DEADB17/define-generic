@@ -30,5 +30,13 @@ test('defineGeneric', function (t) {
     delete methods.DEFAULT;
     t.throws(getMethodType, TypeError);
 
+    t.is(getMethodType.implements(a), true);
+    t.is(getMethodType.implements(b), true);
+    t.is(getMethodType.implements(c), false);
+
+    getMethodType.for('C', function () { return 'C method'; });
+    t.is(getMethodType.implements(c), true);
+    t.is(getMethodType(c), 'C method');
+
     t.end();
 });

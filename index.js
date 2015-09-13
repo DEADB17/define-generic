@@ -9,9 +9,20 @@ function applyGeneric(methods, selector, args) {
 }
 
 function defineGeneric(methods, selector) {
-    return function generic(/* arguments */) {
+    function generic(/* arguments */) {
         return applyGeneric(methods, selector, arguments);
+    }
+
+    generic.for = function forGeneric(key, fn) {
+        methods[key] = fn;
+        return generic;
     };
+
+    generic.implements = function implementsGeneric(/* arguments */) {
+        return typeof selector(methods, arguments) === 'function';
+    };
+
+    return generic;
 }
 
 module.exports = defineGeneric;
