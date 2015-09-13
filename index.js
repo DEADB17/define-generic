@@ -2,14 +2,11 @@
 
 'use strict';
 
-var owns = Object.prototype.hasOwnProperty;
-
-function defineGeneric(defaultKey, getKey, methods) {
+function defineGeneric(getKey, methods) {
     return function appl(/* arguments */) {
-        var fn, key = getKey.apply(null, arguments);
-        if (owns.call(methods, key)) { fn = methods[key]; }
-        else if (owns.call(methods, defaultKey)) { fn = methods[defaultKey]; }
-        else { throw new ReferenceError('No such method: ' + key); }
+        var key = getKey.apply(null, arguments);
+        var fn = methods[key];
+        if (typeof fn !== 'function') throw new TypeError(key + ' is not a function');
         return fn.apply(null, arguments);
     };
 }

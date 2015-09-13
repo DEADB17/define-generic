@@ -9,7 +9,7 @@ test('dispatchOn', function (t) {
     var when, defaults;
 
     function selector(a, b) {
-        return a ? 'A' : b ? 'B' : 'C';
+        return a ? 'A' : b ? 'B' : 'DEFAULT';
     }
 
     when = {
@@ -18,7 +18,7 @@ test('dispatchOn', function (t) {
         B: function () { return 'B method'; }
     };
 
-    defaults = dispatchOn('DEFAULT', selector, when);
+    defaults = dispatchOn(selector, when);
 
     t.is(defaults(true), 'A method');
     t.is(defaults(false, true), 'B method');
@@ -26,7 +26,7 @@ test('dispatchOn', function (t) {
     t.is(defaults(), 'DEAFAULT method');
 
     delete when.DEFAULT;
-    t.throws(defaults, ReferenceError);
+    t.throws(defaults, TypeError);
 
     t.end();
 });
