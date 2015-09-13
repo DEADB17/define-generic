@@ -17,7 +17,7 @@
   "license": "MIT",
   "keywords": [
     "generic functions",
-    "single-dispatch"
+    "single dispatch"
   ],
   "devDependencies": {
     "tape": "^4.2.0"
