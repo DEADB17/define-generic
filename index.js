@@ -3,9 +3,8 @@
 'use strict';
 
 function applyGeneric(methods, selector, args) {
-    var key = selector.apply(null, args);
-    var fn = methods[key];
-    if (typeof fn !== 'function') throw new TypeError(key + ' is not a function');
+    var fn = selector(methods, args);
+    if (typeof fn !== 'function') throw new TypeError(fn + ' is not a valid method');
     return fn.apply(null, args);
 }
 

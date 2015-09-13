@@ -14,8 +14,8 @@ test('dispatchOn', function (t) {
         B: function () { return 'B method'; }
     };
 
-    function selector(a, b) {
-        return a ? 'A' : b ? 'B' : 'DEFAULT';
+    function selector(meths, args) {
+        return args[0] ? meths.A : args[1] ? meths.B : meths.DEFAULT;
     }
 
     defaults = dispatchOn(methods, selector);
