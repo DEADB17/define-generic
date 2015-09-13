@@ -4,7 +4,7 @@
   "description": "Simple single dispatch generic functions",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/tape \"test*.js\""
+    "test": "tape \"test*.js\""
   },
   "repository": {
     "type": "git",
