@@ -11,12 +11,15 @@
     "url": "https://github.com/DEADB17/define-generic.git"
   },
   "bugs": {
-    "url" : "https://github.com/DEADB17/define-generic/issues"
+    "url": "https://github.com/DEADB17/define-generic/issues"
   },
   "author": "DEADB17 <DEADB17@gmail.com>",
   "license": "MIT",
-  "keywords": [ "generic functions", "single-dispatch" ],
+  "keywords": [
+    "generic functions",
+    "single-dispatch"
+  ],
   "devDependencies": {
-    "tape": "^3.5.0"
+    "tape": "^4.2.0"
   }
 }
