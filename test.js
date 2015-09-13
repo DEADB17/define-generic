@@ -6,26 +6,26 @@ var test = require('tape').test;
 var dispatchOn = require('./');
 
 test('dispatchOn', function (t) {
-    var when, defaults;
+    var defaults;
 
-    function selector(a, b) {
-        return a ? 'A' : b ? 'B' : 'DEFAULT';
-    }
-
-    when = {
+    var methods = {
         DEFAULT: function () { return 'DEAFAULT method'; },
         A: function () { return 'A method'; },
         B: function () { return 'B method'; }
     };
 
-    defaults = dispatchOn(selector, when);
+    function selector(a, b) {
+        return a ? 'A' : b ? 'B' : 'DEFAULT';
+    }
+
+    defaults = dispatchOn(methods, selector);
 
     t.is(defaults(true), 'A method');
     t.is(defaults(false, true), 'B method');
     t.is(defaults(false, false), 'DEAFAULT method');
     t.is(defaults(), 'DEAFAULT method');
 
-    delete when.DEFAULT;
+    delete methods.DEFAULT;
     t.throws(defaults, TypeError);
 
     t.end();
