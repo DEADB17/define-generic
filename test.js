@@ -3,10 +3,10 @@
 'use strict';
 
 var test = require('tape').test;
-var dispatchOn = require('./');
+var defineGeneric = require('./');
 
-test('dispatchOn', function (t) {
-    var defaults;
+test('defineGeneric', function (t) {
+    var getMethodType, a, b, c;
 
     var methods = {
         DEFAULT: function () { return 'DEAFAULT method'; },
@@ -15,18 +15,20 @@ test('dispatchOn', function (t) {
     };
 
     function selector(meths, args) {
-        return args[0] ? meths.A : args[1] ? meths.B : meths.DEFAULT;
+        return meths[args[0].class] || meths.DEFAULT;
     }
 
-    defaults = dispatchOn(methods, selector);
+    a = { 'class': 'A' };
+    b = { 'class': 'B' };
+    c = { 'class': 'C' };
+    getMethodType = defineGeneric(methods, selector);
 
-    t.is(defaults(true), 'A method');
-    t.is(defaults(false, true), 'B method');
-    t.is(defaults(false, false), 'DEAFAULT method');
-    t.is(defaults(), 'DEAFAULT method');
+    t.is(getMethodType(a), 'A method');
+    t.is(getMethodType(b), 'B method');
+    t.is(getMethodType(c), 'DEAFAULT method');
 
     delete methods.DEFAULT;
-    t.throws(defaults, TypeError);
+    t.throws(getMethodType, TypeError);
 
     t.end();
 });
