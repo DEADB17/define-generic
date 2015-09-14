@@ -3,40 +3,53 @@
 'use strict';
 
 var test = require('tape').test;
-var defineGeneric = require('./');
+var createGeneric = require('./');
 
-test('defineGeneric', function (t) {
+test('createGeneric', function (t) {
     var getMethodType, a, b, c;
 
-    var methods = {
-        DEFAULT: function () { return 'DEAFAULT method'; },
-        A: function () { return 'A method'; },
-        B: function () { return 'B method'; }
-    };
-
-    function selector(meths, args) {
-        return meths[args[0].class] || meths.DEFAULT;
+    function typeDispatcher() {
+        var meths = {};
+        return {
+            get: function get(args) {
+                return meths[args[0].type];
+            },
+            set: function set(fn, args) {
+                meths[args[0].type] = fn;
+            },
+            app: function app(fn, args) {
+                return fn.apply(args[0], args.slice(1));
+            }
+        };
     }
 
-    a = { 'class': 'A' };
-    b = { 'class': 'B' };
-    c = { 'class': 'C' };
-    getMethodType = defineGeneric(methods, selector);
+    a = { type: 'A' };
+    b = { type: 'B' };
+    c = { type: 'C' };
 
-    t.is(getMethodType(a), 'A method');
-    t.is(getMethodType(b), 'B method');
-    t.is(getMethodType(c), 'DEAFAULT method');
+    getMethodType = createGeneric(typeDispatcher(), function DEFAULT() { return 'DEAFAULT method'; });
+    getMethodType.define(function A() { return 'A method'; }, a);
+    getMethodType.define(function B() { return 'B method'; }, b);
 
-    delete methods.DEFAULT;
-    t.throws(getMethodType, TypeError);
+    t.is(getMethodType(a), 'A method', 'applies A method');
+    t.is(getMethodType(b), 'B method', 'applies B method');
+    t.is(getMethodType(c), 'DEAFAULT method', 'applies DEAFAULT method');
 
-    t.is(getMethodType.implements(a), true);
-    t.is(getMethodType.implements(b), true);
-    t.is(getMethodType.implements(c), false);
+    t.is(getMethodType.isDefined(a), true, 'method defined for A');
+    t.is(getMethodType.isDefined(b), true, 'method defined for B');
+    t.is(getMethodType.isDefined(c), false, 'method NOT defined for C');
 
-    getMethodType.for('C', function () { return 'C method'; });
-    t.is(getMethodType.implements(c), true);
-    t.is(getMethodType(c), 'C method');
+    t.throws(createGeneric,
+             /Missing methods object/,
+             'throws: Missing methods object');
+    t.throws(function () { createGeneric({}); },
+             /Expecting get and set functions in methods object/,
+             'throws: Expecting get and set functions in methods object');
+
+    getMethodType = createGeneric(typeDispatcher());
+    t.throws(function () { getMethodType(c); },
+             /No such method/,
+             'thows: No such method when missing default');
 
     t.end();
 });

@@ -4,11 +4,11 @@
 ```javascript
 var defineGeneric = require('define-generic');
 
-defineGeneric(methods/*Object*/, selector/*Function*/) -> genericFunction
+defineGeneric(dispatcher:DispatcherObject, defaultMethod:Function) -> GenericFunction
 
-genericFunction.for(key/*String*/, method/*Function*/) -> genericFunction
+genericFunction.define(method:Function, ...arguments) -> GenericFunction
 
-genericFunction.implements(...parameters) -> Bool
+genericFunction.isDefined(...arguments) -> Bool
 
-genericFunction(...parameters) -> Any
+genericFunction(...arguments) -> *
 ```
