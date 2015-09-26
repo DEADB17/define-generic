@@ -6,11 +6,6 @@
 
 'use strict';
 
-function isFunction(fn) { return typeof fn === 'function'; }
-
-function noMethod() { throw new ReferenceError('No such method'); }
-
-
 /**
  * @typedef {Object} Dispatcher
  * @prop {Dispatcher-get} get
@@ -65,29 +60,22 @@ function noMethod() { throw new ReferenceError('No such method'); }
  * @returns {GenericFunction}
  */
 
-function create(dispatcher, defaultMethod) {
-    if (dispatcher == null) { // eslint-disable-line no-eq-null
-        throw new ReferenceError('Missing methods object');
-    } else if (!isFunction(dispatcher.get) || !isFunction(dispatcher.set)) {
-        throw new TypeError('Expecting get and set functions in methods object');
-    }
+var F = 'function';
 
-
-    var defaultMeth = isFunction(defaultMethod) ? defaultMethod : noMethod; // eslint-disable-line vars-on-top
-
+function create(methods, getMethod, setMethod, applyMethod, defaultMethod) {
     function generic(/* arguments */) {
-        var fn = dispatcher.get(arguments);
-        if (!isFunction(fn)) fn = defaultMeth;
-        return dispatcher.app(fn, arguments);
+        var fn = getMethod(methods, arguments);
+        if (typeof fn !== F) fn = defaultMethod;
+        return applyMethod(fn, arguments);
     }
 
     generic.define = function define(/*fn, arguments */) {
-        dispatcher.set(arguments);
+        setMethod(methods, arguments);
         return generic;
     };
 
     generic.isDefined = function isDefined(/* arguments */) {
-        return isFunction(dispatcher.get(arguments));
+        return F === typeof getMethod(methods, arguments);
     };
 
     return generic;

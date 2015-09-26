@@ -9,28 +9,29 @@ var slice = Array.prototype.slice;
 
 
 test('createGeneric', function (t) {
-    var getMethodType, a, b, c;
+    var getMethodType;
 
-    function typeDispatcher() {
-        var meths = {};
-        return {
-            get: function get(args) {
-                return meths[args[0].type];
-            },
-            set: function set(args) {
-                meths[args[1].type] = args[0];
-            },
-            app: function app(fn, args) {
-                return fn.apply(args[0], slice.call(args, 1));
-            }
-        };
+    var a = { type: 'A' };
+    var b = { type: 'B' };
+    var c = { type: 'C' };
+
+    var meths = {};
+
+    function getMethod(methods, args) {
+        return methods[args[0].type];
     }
 
-    a = { type: 'A' };
-    b = { type: 'B' };
-    c = { type: 'C' };
+    function setMethod(methods, args) {
+        methods[args[1].type] = args[0];
+    }
 
-    getMethodType = createGeneric(typeDispatcher(), function DEFAULT() { return 'DEAFAULT method'; });
+    function applyMethod(fn, args) {
+        return fn.apply(args[0], slice.call(args, 1));
+    }
+
+    function defaultMethod() { return 'DEAFAULT method'; }
+
+    getMethodType = createGeneric(meths, getMethod, setMethod, applyMethod, defaultMethod);
     getMethodType.define(function A() { return 'A method'; }, a);
     getMethodType.define(function B() { return 'B method'; }, b);
 
@@ -41,18 +42,6 @@ test('createGeneric', function (t) {
     t.is(getMethodType.isDefined(a), true, 'method defined for A');
     t.is(getMethodType.isDefined(b), true, 'method defined for B');
     t.is(getMethodType.isDefined(c), false, 'method NOT defined for C');
-
-    t.throws(createGeneric,
-             /Missing methods object/,
-             'throws: Missing methods object');
-    t.throws(function () { createGeneric({}); },
-             /Expecting get and set functions in methods object/,
-             'throws: Expecting get and set functions in methods object');
-
-    getMethodType = createGeneric(typeDispatcher());
-    t.throws(function () { getMethodType(c); },
-             /No such method/,
-             'thows: No such method when missing default');
 
     t.end();
 });
