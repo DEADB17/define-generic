@@ -6,8 +6,6 @@
 
 'use strict';
 
-var slice = Array.prototype.slice;
-
 function isFunction(fn) { return typeof fn === 'function'; }
 
 function noMethod() { throw new ReferenceError('No such method'); }
@@ -78,21 +76,18 @@ function create(dispatcher, defaultMethod) {
     var defaultMeth = isFunction(defaultMethod) ? defaultMethod : noMethod; // eslint-disable-line vars-on-top
 
     function generic(/* arguments */) {
-        var args = slice.call(arguments);
-        var fn = dispatcher.get(args);
+        var fn = dispatcher.get(arguments);
         if (!isFunction(fn)) fn = defaultMeth;
-        return dispatcher.app(fn, args);
+        return dispatcher.app(fn, arguments);
     }
 
-    generic.define = function define(fn /* arguments */) {
-        var args = slice.call(arguments, 1);
-        dispatcher.set(fn, args);
+    generic.define = function define(/*fn, arguments */) {
+        dispatcher.set(arguments);
         return generic;
     };
 
     generic.isDefined = function isDefined(/* arguments */) {
-        var args = slice.call(arguments);
-        return isFunction(dispatcher.get(args));
+        return isFunction(dispatcher.get(arguments));
     };
 
     return generic;

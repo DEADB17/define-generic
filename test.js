@@ -5,6 +5,9 @@
 var test = require('tape').test;
 var createGeneric = require('./');
 
+var slice = Array.prototype.slice;
+
+
 test('createGeneric', function (t) {
     var getMethodType, a, b, c;
 
@@ -14,11 +17,11 @@ test('createGeneric', function (t) {
             get: function get(args) {
                 return meths[args[0].type];
             },
-            set: function set(fn, args) {
-                meths[args[0].type] = fn;
+            set: function set(args) {
+                meths[args[1].type] = args[0];
             },
             app: function app(fn, args) {
-                return fn.apply(args[0], args.slice(1));
+                return fn.apply(args[0], slice.call(args, 1));
             }
         };
     }
