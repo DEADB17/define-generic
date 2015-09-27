@@ -1,84 +1,53 @@
 /*eslint strict:[2,"global"]*/
 
+'use strict';
+
+
 /**
  * @module define-generic
  */
 
-'use strict';
 
 /**
- * @typedef {Object} Dispatcher
- * @prop {Dispatcher-get} get
- * @prop {Dispatcher-set} set
- * @prop {Dispatcher-app} app
- */
-
-/**
- * @callback Dispatcher-get
- * @param {Array} [args] The parameters to dispatch on
- */
-
-/**
- * @callback {function} Dispatcher-set
- * @param {function} fn The function to use as method
- * @param {Array} [args] The parameters to dispatch on
- */
-
-/**
- * @callback {function} Dispatcher-app
- * @param {function} fn The function to use as method
- * @param {Array} [args] The parameters to apply to the method
- */
-
-
-/**
- * @typedef {function} GenericFunction
- * @param {...*} [arguments] The parameters that the Dispatcher getter and the returned method expect.
- * Conventionally the first parameter is an object when dispatching on type.
- * @prop {GenericFunction-define} define
- * @prop {GenericFunction-isDefined} isDefined
- */
-
-/**
- * @callback GenericFunction-define
- * @param {function} fn The function to use as method
- * @param {...*} [arguments] The parameters to apply to the method
- */
-
-/**
- * @callback GenericFunction-isDefined
- * @param {...*} [arguments] The parameters to identify the method
- */
-
-
-/**
- * Create a generic function
+ * Creates a generic function
  * @alias module:define-generic
- * @param {Dispatcher} dispatcher The dispatcher object
- * @param {function} [defaultMethod=noMethod] The method to use when dispatcher.get does not return a function.
- * Defaults to noMethod which throws a ReferenceError.
+ * @param {Object} methods Record to hold the methods.
+ * @param {function(methods, arguments[])} getMethod
+ * Getter that maps arbitrary arguments to a method in the methods record.
+ * @param {function(methods, arguments[])} setMethod
+ * Setter that maps arbitrary arguments to a method in the methods record.
+ * @param {function(method, arguments[])} applyMethod Function that maps arbitrary arguments to a method.
+ * @param {function} defaultMethod Function to use when no method is found.
  * @returns {GenericFunction}
  */
 
-var F = 'function';
-
-function create(methods, getMethod, setMethod, applyMethod, defaultMethod) {
+module.exports = function create(methods, getMethod, setMethod, applyMethod, defaultMethod) {
     function generic(/* arguments */) {
-        var fn = getMethod(methods, arguments);
-        if (typeof fn !== F) fn = defaultMethod;
+        var meth = getMethod(methods, arguments);
+        var fn = typeof meth === 'function' ? meth : defaultMethod;
         return applyMethod(fn, arguments);
     }
 
-    generic.define = function define(/*fn, arguments */) {
+    generic.put = function put(/* fn, arguments */) {
         setMethod(methods, arguments);
         return generic;
     };
 
-    generic.isDefined = function isDefined(/* arguments */) {
-        return F === typeof getMethod(methods, arguments);
-    };
-
     return generic;
-}
+};
 
-module.exports = create;
+
+/**
+ * @callback GenericFunction
+ * @param {...*} [arguments] Arguments to the generic function.
+ * Conventionally the first parameter is an object when dispatching on type.
+ * @returns {*} Whatever the specific or default method returns.
+ * @prop {GenericFunction-put} put
+ */
+
+/**
+ * @callback GenericFunction-put
+ * @param {function} fn The function to use as method.
+ * @param {...*} [arguments] The parameters to apply to the method.
+ * @returns {GenericFunction} An instance for chaining calls.
+ */
