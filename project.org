@@ -18,6 +18,26 @@ Flexible JavaScript generic functions.
 ** DONE define core
 ** TODO define common dispatchers
 *** on tag
+#+begin_src js
+  /*eslint-env commonjs*/
+  /*eslint strict:0*/
+
+  module.exports = function create(prop) {
+      return {
+          methods: {},
+          getMethod: function getMethod(methods, args) {
+              var key = args[0][prop];
+              return methods[key];
+          },
+          setMethod: function setMethod(methods, args) {
+              var fn = args[0];
+              var key = args[1][prop];
+              methods[key] = fn;
+          }
+      };
+  };
+
+#+end_src
 *** on constructor function
 #+begin_src js
   /*eslint-env commonjs*/
