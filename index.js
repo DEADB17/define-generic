@@ -38,7 +38,7 @@ module.exports = function create(methods, getMethod, setMethod, applyMethod, def
 
 
 /**
- * @callback GenericFunction
+ * @typedef {function} GenericFunction
  * @param {...*} [arguments] Arguments to the generic function.
  * Conventionally the first parameter is an object when dispatching on type.
  * @returns {*} Whatever the specific or default method returns.
