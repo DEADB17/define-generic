@@ -7,9 +7,9 @@ Creates a generic function
 ### Params:
 
 * **Object** *methods* Record to hold the methods.
-* **function(methods, Array.<arguments>)** *getMethod* Getter that maps arbitrary arguments to a method in the methods record.
-* **function(methods, Array.<arguments>)** *setMethod* Setter that maps arbitrary arguments to a method in the methods record.
-* **function(method, Array.<arguments>)** *applyMethod* Function that maps arbitrary arguments to a method.
+* **function(methods, arguments[])** *getMethod* Getter that maps arbitrary arguments to a method in the methods record.
+* **function(methods, arguments[])** *setMethod* Setter that maps arbitrary arguments to a method in the methods record.
+* **function(method, arguments[])** *applyMethod* Function that maps arbitrary arguments to a method.
 * **function** *defaultMethod* Function to use when no method is found.
 
 ### Return:
