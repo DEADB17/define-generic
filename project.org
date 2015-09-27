@@ -1,0 +1,33 @@
+:SETTINGS:
+
+#+AUTHOR:  DEADB17
+#+EMAIL:   DEADB17@gmail.com
+#+TITLE:   define-generic
+
+#+OPTIONS:          H:4 num:nil toc:nil \n:nil ':t -:nil @:t ::t |:t ^:t f:t *:t <:t
+#+OPTIONS:          TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:nil
+#+OPTIONS:          html-style:nil html-scripts:nil html5-fancy:t
+#+OPTIONS:          author:t email:t creator:nil
+#+HTML_DOCTYPE:     html5
+:END:
+
+*  define-generic
+
+Flexible JavaScript generic functions.
+
+** DONE define core
+** TODO define common dispatchers
+- on tag
+- on constructor function
+- on constructor function name
+** TODO define common appliers
+** TODO add wrapping constructor
+cases
+- Argument validation
+- Convenience constructors for common cases
+- Augmented API
+  - isDefined
+  - getMethodFor
+  - clone
+** TODO describe how to extend
+** TODO explain motivation
