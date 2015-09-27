@@ -3,40 +3,44 @@
 'use strict';
 
 var test = require('tape').test;
-var defineGeneric = require('./');
+var createGeneric = require('./');
 
-test('defineGeneric', function (t) {
-    var getMethodType, a, b, c;
+var slice = Array.prototype.slice;
 
-    var methods = {
-        DEFAULT: function () { return 'DEAFAULT method'; },
-        A: function () { return 'A method'; },
-        B: function () { return 'B method'; }
+
+test('createGeneric', function (t) {
+    var a = 'A';
+    var b = 'B';
+    var c = 'C';
+
+    var aRet = 'A method';
+    var bRet = 'B method';
+    var dRet = 'DEAFAULT method';
+
+    var G = {
+        methods: {},
+        getMethod: function getMethod(methods, args) {
+            var key = args[0];
+            return methods[key];
+        },
+        setMethod: function setMethod(methods, args) {
+            var fn = args[0];
+            var key = args[1];
+            methods[key] = fn;
+        },
+        applyMethod: function applyMethod(fn, args) {
+            return fn.apply(null, slice.call(args, 1));
+        },
+        defaultMethod: function defaultMethod() { return dRet; }
     };
 
-    function selector(meths, args) {
-        return meths[args[0].class] || meths.DEFAULT;
-    }
+    var applyGeneric = createGeneric(G.methods, G.getMethod, G.setMethod, G.applyMethod, G.defaultMethod)
+        .put(function A() { return aRet; }, a)
+        .put(function B() { return bRet; }, b);
 
-    a = { 'class': 'A' };
-    b = { 'class': 'B' };
-    c = { 'class': 'C' };
-    getMethodType = defineGeneric(methods, selector);
-
-    t.is(getMethodType(a), 'A method');
-    t.is(getMethodType(b), 'B method');
-    t.is(getMethodType(c), 'DEAFAULT method');
-
-    delete methods.DEFAULT;
-    t.throws(getMethodType, TypeError);
-
-    t.is(getMethodType.implements(a), true);
-    t.is(getMethodType.implements(b), true);
-    t.is(getMethodType.implements(c), false);
-
-    getMethodType.for('C', function () { return 'C method'; });
-    t.is(getMethodType.implements(c), true);
-    t.is(getMethodType(c), 'C method');
+    t.is(applyGeneric(a), aRet, 'applies A method');
+    t.is(applyGeneric(b), bRet, 'applies B method');
+    t.is(applyGeneric(c), dRet, 'applies DEAFAULT method');
 
     t.end();
 });
