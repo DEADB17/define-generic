@@ -137,3 +137,4 @@ local.properties
 
 # Project specific
 /node_source/public
+.tern-project

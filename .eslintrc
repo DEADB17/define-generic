@@ -124,7 +124,7 @@
         "constructor-super": 0,
         "curly": [2, "multi-line"],
         "default-case": 2,
-        "dot-location": [1, "object"],
+        "dot-location": [1, "property"],
         "dot-notation": [2, { "allowKeywords": true }],
         "eol-last": 2,
         "eqeqeq": [2, "smart"],
