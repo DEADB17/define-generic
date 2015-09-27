@@ -17,9 +17,39 @@ Flexible JavaScript generic functions.
 
 ** DONE define core
 ** TODO define common dispatchers
-- on tag
-- on constructor function
-- on constructor function name
+*** on tag
+*** on constructor function
+#+begin_src js
+  /*eslint-env commonjs*/
+  /*eslint strict:0, no-plusplus:0*/
+
+  var CONS = 0;
+  var METH = 1;
+
+  function indexOf(list, it, alt) {
+      var n = list.length;
+      var index = 0;
+      while (index++ < n) if (list[index][CONS] === it) return index;
+      return alt;
+  }
+
+  module.exports = {
+      methods: [],
+      getMethod: function getMethod(methods, args) {
+          var cons = args[CONS];
+          var index = indexOf(methods, cons, -1);
+          return index >= 0 && methods[index][METH];
+      },
+      setMethod: function setMethod(methods, args) {
+          var meth = args[0];
+          var cons = args[1].constructor;
+          var index = indexOf(methods, cons, methods.length);
+          methods[index] = [ cons, meth ];
+      }
+  };
+
+#+end_src
+*** on constructor function name
 ** TODO define common appliers
 ** TODO add wrapping constructor
 cases
