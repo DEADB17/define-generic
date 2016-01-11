@@ -1,4 +1,5 @@
 /**
+ * @private
  * @arg {*} fn Value to check if it is a function.
  * @arg {*} alt Alternative.
  * @return {function|*} The first argument if it is a function, the second otherwise.
@@ -10,8 +11,9 @@ function check(fn, alt) {
 
 
 /**
+ * @private
  * @arg {function} fn Method.
- * @arg {*[]} args Arguments.
+ * @arg {Array} args Arguments.
  * @return {*} Any.
  */
 function applyNull(fn, args) {
@@ -21,6 +23,7 @@ function applyNull(fn, args) {
 
 
 /**
+ * @private
  * Function to use as a default method. Just throws an error.
  * @throws {ReferenceError} No such method.
  * @return {void}
@@ -39,7 +42,7 @@ function error() {
  * Function to select a specific method from the set of methods based on the arguments.
  * @callback getMethod
  * @arg {methods} methods Data structure to hold the methods.
- * @arg {*[]} args Arguments array.
+ * @arg {Array} args Arguments array.
  * @return {method} Method to invoke.
  */
 
@@ -47,7 +50,7 @@ function error() {
  * Function that applies arbitrary arguments to a method.
  * @callback applyMethod
  * @arg {method} method Method to use.
- * @arg {*[]} args Arguments array to apply to the method.
+ * @arg {Array} args Arguments array to apply to the method.
  * @return {*} Any value.
  */
 
@@ -65,7 +68,7 @@ function error() {
  * Data structure to hold the methods.
  * @return {function} Generic function.
  */
-module.exports = function create(spec, methods) {
+function create(spec, methods) {
     'use strict';
 
     var getMethod = check(spec.getMethod, false);
@@ -81,4 +84,6 @@ module.exports = function create(spec, methods) {
         var fn = typeof method === 'function' ? method : defaultMethod;
         return applyMethod(fn, arguments);
     };
-};
+}
+
+module.exports = create;
