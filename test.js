@@ -1,46 +1,47 @@
-/*eslint strict:[2,"global"], func-names:0, no-nested-ternary:0*/
+/*eslint strict:[2,"global"], func-names:0*/
 
 'use strict';
 
 var test = require('tape').test;
-var createGeneric = require('./');
+var createReadOnlyGeneric = require('./');
 
 var slice = Array.prototype.slice;
 
 
-test('createGeneric', function (t) {
+test('createReadOnlyGeneric', function (t) {
     var a = 'A';
     var b = 'B';
-    var c = 'C';
+    var d = '*';
 
     var aRet = 'A method';
     var bRet = 'B method';
     var dRet = 'DEAFAULT method';
 
-    var G = {
-        methods: {},
-        getMethod: function getMethod(methods, args) {
+    var spec = {
+        getMethod: function (methods, args) {
             var key = args[0];
             return methods[key];
         },
-        setMethod: function setMethod(methods, args) {
-            var fn = args[0];
-            var key = args[1];
-            methods[key] = fn;
+
+        applyMethod: function (fn, args) {
+            return fn.apply(null, args);
         },
-        applyMethod: function applyMethod(fn, args) {
-            return fn.apply(null, slice.call(args, 1));
-        },
-        defaultMethod: function defaultMethod() { return dRet; }
+
+        defaultMethod: function () { return dRet; }
     };
 
-    var applyGeneric = createGeneric(G.methods, G.getMethod, G.setMethod, G.applyMethod, G.defaultMethod)
-        .put(function A() { return aRet; }, a)
-        .put(function B() { return bRet; }, b);
+    var methods = {};
 
-    t.is(applyGeneric(a), aRet, 'applies A method');
-    t.is(applyGeneric(b), bRet, 'applies B method');
-    t.is(applyGeneric(c), dRet, 'applies DEAFAULT method');
+    var genFun;
+
+    methods[a] = function () { return aRet; };
+    methods[b] = function () { return slice.call(arguments).concat(bRet); };
+
+    genFun = createReadOnlyGeneric(spec.getMethod, spec.applyMethod, spec.defaultMethod, methods);
+
+    t.is(genFun(a), aRet, 'applies A method');
+    t.same(genFun(b, 1, '2'), [ b, 1, '2', bRet ], 'applies B method with arguments');
+    t.is(genFun(d), dRet, 'applies DEAFAULT method');
 
     t.end();
 });
