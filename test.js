@@ -53,5 +53,31 @@ test('define-generic', function (t) {
     t.end();
 });
 
+
+test('tagged', function (t) {
+    var create = require('./tagged');
+
+    var key1 = 'obj1';
+    var key2 = 'obj2';
+
+    var o1 = { '@type': key1 };
+    var o2 = { '@type': key2 };
+    var od = { '@type': 'none' };
+
+    var methods = {};
+
+    var generic;
+
+    methods[key1] = function (obj) { return [ obj, key1 ]; };
+    methods[key2] = function (obj) { return [ obj, key2 ]; };
+
+    generic = create('@type', methods);
+
+    t.same(generic(o1), [ o1, key1 ], 'method with key1 called');
+    t.same(generic(o2), [ o2, key2 ], 'method with key2 called');
+    t.throws(function () { generic(od); }, ReferenceError);
+
+    t.end();
+});
     t.end();
 });
