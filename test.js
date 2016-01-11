@@ -1,3 +1,4 @@
+/*eslint-env es6*/
 /*eslint strict:[2,"global"], func-names:0*/
 
 'use strict';
@@ -79,5 +80,33 @@ test('tagged', function (t) {
 
     t.end();
 });
+
+
+test('constructor', function (t) {
+    var create = require('./constructor');
+
+    var generic, table;
+
+    function MyObject() {}
+
+    table = [
+        [ Boolean, () => 'Boolean' ],
+        [ Function, () => 'Function' ],
+        [ Number, () => 'Number' ],
+        [ Object, () => 'Object' ],
+        [ String, () => 'String' ],
+        [ MyObject, () => 'MyObject' ]
+    ];
+
+    generic = create(table);
+
+    t.is(generic(true), 'Boolean', 'Boolean');
+    t.is(generic(function () {}), 'Function', 'Function');
+    t.is(generic(17), 'Number', 'Number');
+    t.is(generic(NaN), 'Number', 'Number');
+    t.is(generic({}), 'Object', 'Object');
+    t.is(generic('Hello'), 'String', 'String');
+    t.is(generic(new MyObject()), 'MyObject', 'MyObject');
+
     t.end();
 });
