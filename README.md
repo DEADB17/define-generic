@@ -61,6 +61,9 @@ var genericFn = define(spec, methods);
 genericFn(/*arguments*/);
 ```
 
+See the implementations of [tagged.js](tagged.js) and
+[constructor.js](constructor.js) as examples.
+
 
 ### API
 
@@ -77,7 +80,7 @@ Creates a generic function
 
 #### GenericFunction
 
-`GenericFunction(...arguments)`
+`GenericFunction(...arguments)` → `Any`
 
 * `...arguments` *Any* Arguments to the generic function.  
   Conventionally the first parameter is an object when dispatching on type.
