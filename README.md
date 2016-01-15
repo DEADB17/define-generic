@@ -3,9 +3,68 @@
 `npm install define-generic`
 
 
-## API
+## Generic function dispatched by tag
 
-## define
+```js
+var define = require('define-generic/tagged');
+
+var ob1 = { '@type': 'type-1' };
+var ob2 = { '@type': 'type-2' };
+
+var methods = {
+    'type-1': function (obj) { return 'Type 1 object'; },
+    'type-2': function (obj) { return 'Type 2 object'; }
+};
+
+var generic = define('@type', methods);
+
+generic(ob1); // → 'Type 1 object'
+generic(ob2); // → 'Type 2 object'
+```
+
+
+## Generic function dispatched by constructor
+
+```js
+var define = require('define-generic/constructor');
+
+function MyObject() {}
+
+var table = [
+    [ Boolean, () => 'Boolean' ],
+    [ Function, () => 'Function' ],
+    [ Number, () => 'Number' ],
+    [ Object, () => 'Object' ],
+    [ String, () => 'String' ],
+    [ MyObject, () => 'MyObject' ]
+];
+
+var generic = define(table);
+
+generic(true); // → 'Boolean'
+generic(function () {}); // → 'Function'
+generic(17); // → 'Number'
+generic(NaN); // → 'Number'
+generic({}); // → 'Object'
+generic('Hello'); // → 'String'
+generic(new MyObject()); // → 'MyObject'
+```
+
+
+## Define your own
+
+```js
+var define = require('define-generic');
+var methods = { /* definitions */ };
+var spec = { getMethod: function (methods, args) { /* select method from args */ } };
+var genericFn = define(spec, methods);
+genericFn(/*arguments*/);
+```
+
+
+### API
+
+#### define
 
 Creates a generic function
 
@@ -16,7 +75,7 @@ Creates a generic function
 * returns *GenericFunction*
 
 
-## GenericFunction
+#### GenericFunction
 
 `GenericFunction(...arguments)`
 
@@ -25,7 +84,7 @@ Creates a generic function
 * returns *Any* Whatever the specific or default method returns.
 
 
-## Spec
+#### Spec
 
 Object containing the specification that defines how the generic function
 operates.  
