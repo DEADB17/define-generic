@@ -68,7 +68,7 @@ function error() {
  * Data structure to hold the methods.
  * @return {function} Generic function.
  */
-function create(spec, methods) {
+function define(spec, methods) {
     'use strict';
 
     var getMethod = check(spec.getMethod, false);
@@ -86,4 +86,4 @@ function create(spec, methods) {
     };
 }
 
-module.exports = create;
+module.exports = define;

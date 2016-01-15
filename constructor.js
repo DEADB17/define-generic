@@ -1,4 +1,4 @@
-var create = require('./');
+var define = require('./');
 
 /**
  * Generic function dispatched by constructor.
@@ -30,5 +30,5 @@ module.exports = function constructor(table) {
         return acc;
     }, { index: [], methods: [] });
 
-    return create(spec, methods);
+    return define(spec, methods);
 };

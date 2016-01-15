@@ -1,4 +1,4 @@
-var create = require('./');
+var define = require('./');
 
 /**
  * Generic function dispatched by tag.
@@ -17,5 +17,5 @@ module.exports = function tagged(tagProperty, methods) {
         }
     };
 
-    return create(spec, methods);
+    return define(spec, methods);
 };

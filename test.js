@@ -9,7 +9,7 @@ var slice = Array.prototype.slice;
 
 
 test('define-generic', function (t) {
-    var create = require('./');
+    var define = require('./');
 
     var a = 'A';
     var b = 'B';
@@ -36,11 +36,11 @@ test('define-generic', function (t) {
     methods[b] = function () { return slice.call(arguments).concat(bRet); };
 
 
-    t.throws(function () { create({}, methods); }, TypeError, 'Throws if missing spec.getMethod');
+    t.throws(function () { define({}, methods); }, TypeError, 'Throws if missing spec.getMethod');
 
 
     spec1.getMethod = getMethod;
-    generic1 = create(spec1, methods);
+    generic1 = define(spec1, methods);
     t.is(generic1(a), aRet, 'applies A method');
     t.same(generic1(b, 1, '2'), [ b, 1, '2', bRet ], 'applies B method with arguments');
     t.throws(function () { generic1(d); }, ReferenceError, 'applies DEAFAULT method: throw error');
@@ -48,7 +48,7 @@ test('define-generic', function (t) {
 
     spec2.getMethod = getMethod;
     spec2.defaultMethod = defaultMethod;
-    generic2 = create(spec2, methods);
+    generic2 = define(spec2, methods);
     t.is(generic2(d), dRet, 'applies DEAFAULT method');
 
     t.end();
@@ -56,7 +56,7 @@ test('define-generic', function (t) {
 
 
 test('tagged', function (t) {
-    var create = require('./tagged');
+    var define = require('./tagged');
 
     var key1 = 'obj1';
     var key2 = 'obj2';
@@ -72,7 +72,7 @@ test('tagged', function (t) {
     methods[key1] = function (obj) { return [ obj, key1 ]; };
     methods[key2] = function (obj) { return [ obj, key2 ]; };
 
-    generic = create('@type', methods);
+    generic = define('@type', methods);
 
     t.same(generic(o1), [ o1, key1 ], 'method with key1 called');
     t.same(generic(o2), [ o2, key2 ], 'method with key2 called');
@@ -83,7 +83,7 @@ test('tagged', function (t) {
 
 
 test('constructor', function (t) {
-    var create = require('./constructor');
+    var define = require('./constructor');
 
     var generic, table;
 
@@ -98,7 +98,7 @@ test('constructor', function (t) {
         [ MyObject, () => 'MyObject' ]
     ];
 
-    generic = create(table);
+    generic = define(table);
 
     t.is(generic(true), 'Boolean', 'Boolean');
     t.is(generic(function () {}), 'Function', 'Function');
